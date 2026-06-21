@@ -1,6 +1,6 @@
 # SearchRec-LLM
 
-A production-style local search and recommendation platform inspired by the common architecture of large-scale technology and e-commerce recommendation systems.
+A production-style local search and recommendation platform inspired by the common architecture of e-commerce recommendation systems.
 
 SearchRec-LLM is a modular, local-first machine learning system for product discovery. It covers synthetic data generation, structured query understanding, candidate retrieval, recommendation, sequential modeling, multi-stage ranking, text-and-metadata item representations, candidate-constrained generative recommendation, offline validation, FastAPI serving, and a Streamlit dashboard.
 
