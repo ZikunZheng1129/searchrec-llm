@@ -478,7 +478,7 @@ def generate_model_selection_report(
 Stage 5 status: validation framework added for current local baselines.
 
 Data caveat: all current metrics come from synthetic/local debug data.
-These results are useful for model-selection mechanics and portfolio discussion,
+These results are useful for model-selection mechanics and technical analysis,
 not production claims.
 
 ## Existing Evaluated Components
@@ -540,7 +540,7 @@ not production claims.
 Add future stage result CSVs into `validation/results/`, normalize them into
 the same leaderboard schema, and keep model selection stage-specific.
 
-## Interview Talking Point
+## Technical Takeaway
 
 “We separated unit tests from model validation. Tests prove the code works;
 validation compares model choices and tradeoffs.”

@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-SearchRec-LLM is a local, production-style portfolio system for search, recommendation, ranking, text/metadata item representation, and candidate-constrained GenRec. It demonstrates the engineering shape of a modern discovery stack while staying reproducible on synthetic debug data and deterministic mock LLM clients.
+SearchRec-LLM is a local, production-style system for search, recommendation, ranking, text/metadata item representation, and candidate-constrained GenRec. It demonstrates the engineering shape of a modern discovery stack while staying reproducible on synthetic debug data and deterministic mock LLM clients.
 
 The project is not production performance evidence, not a production deployment, and does not claim platform-internal data, real user traffic, or real business impact. Its value is in system design, modular implementation, evaluation discipline, fallback behavior, and an end-to-end demo.
 
@@ -10,7 +10,7 @@ The project is not production performance evidence, not a production deployment,
 
 Modern discovery systems need to understand intent, retrieve relevant candidates, personalize recommendations, rank results, handle cold-start catalog items, incorporate content signals, and safely use LLMs without letting them hallucinate unavailable products. SearchRec-LLM turns those requirements into a modular project that can be inspected, tested, evaluated, and demonstrated.
 
-## Role Alignment
+## Technical Scope
 
 This project maps to large-scale recommendation, e-commerce search, content recommendation, product retrieval/ranking, and search/recommendation infrastructure roles because it includes query understanding, candidate recall, recommender baselines, sequential models, multi-stage ranking, text/metadata item representation, GenRec safety design, validation reports, and serving surfaces.
 
@@ -88,6 +88,6 @@ bash scripts/launch_api.sh
 bash scripts/launch_dashboard.sh
 ```
 
-## Interview-Ready Takeaway
+## Technical Takeaway
 
-SearchRec-LLM shows that I can design and implement a full discovery system, compare model choices with validation artifacts, integrate LLMs safely through candidate constraints and fallbacks, and package the result as a reproducible local demo.
+SearchRec-LLM demonstrates a full local discovery system, component-level model comparison with validation artifacts, LLM integration through candidate constraints and fallbacks, and reproducible API/dashboard demos.

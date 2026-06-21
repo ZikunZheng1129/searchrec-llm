@@ -48,4 +48,4 @@ python src/pipelines/train_sequence_model.py --config configs/sequence/sasrec_de
 - Regenerate final reports with `src/pipelines/generate_validation_report.py`.
 - Note whether results were produced locally, on Colab, or on another GPU environment.
 
-Colab is a future scaling path, not a requirement for the current local portfolio system.
+Colab is a future scaling path, not a requirement for the current local system.

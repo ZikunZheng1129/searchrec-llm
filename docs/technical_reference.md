@@ -1,6 +1,6 @@
 # Technical Reference
 
-This reference documents the current inspected SearchRec-LLM repository. It is meant for maintainers and technical interview preparation; the README stays focused on the public project story.
+This reference documents the current inspected SearchRec-LLM repository. It is meant for maintainers and technical readers; the README stays focused on the public project overview.
 
 All paths are repository-relative. Current artifacts are built from synthetic debug data and deterministic mock LLM clients unless noted otherwise.
 
@@ -26,7 +26,7 @@ Top-level layout:
 | `app/api/` | Local FastAPI service over generated artifacts. |
 | `app/dashboard/` | Streamlit demo over generated artifacts. |
 | `validation/` | Experiment templates, result CSVs, reports, ablations, and error analysis. |
-| `docs/` | Public documentation, results summaries, and career/interview material. |
+| `docs/` | Public technical documentation, results summaries, reproducibility notes, and demo guides. |
 | `tests/` | Unit and integration tests. |
 
 ## Package And Module Map

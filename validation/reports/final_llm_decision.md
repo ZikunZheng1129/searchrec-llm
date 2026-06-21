@@ -62,7 +62,7 @@ generation as the final recommendation output.
 - Human preference evaluation.
 - API/dashboard demo.
 
-## Interview Talking Point
+## Technical Takeaway
 
 “We tested direct generation and candidate-constrained GenRec. Direct generation
 had invalid item risk, so the final design grounds LLM outputs in retrieved

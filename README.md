@@ -1,69 +1,84 @@
 # SearchRec-LLM
 
-A production-style local search and recommendation platform inspired by the common architecture of e-commerce recommendation systems.
+An end-to-end search, recommendation, ranking, and candidate-constrained GenRec system for content and commerce discovery.
 
-SearchRec-LLM is a modular, local-first machine learning system for product discovery. It covers synthetic data generation, structured query understanding, candidate retrieval, recommendation, sequential modeling, multi-stage ranking, text-and-metadata item representations, candidate-constrained generative recommendation, offline validation, FastAPI serving, and a Streamlit dashboard.
+SearchRec-LLM is a modular, local-first machine-learning project that demonstrates the architecture of a modern search and recommendation stack. It combines hybrid candidate retrieval, collaborative and sequential recommendation, multi-stage ranking, structured query understanding, text-and-metadata item representations, catalog-grounded GenRec, offline validation, and local serving through FastAPI and Streamlit.
 
-The project is designed to demonstrate how a serious search/recommendation stack fits together beyond a single notebook. Traditional retrieval and ranking produce measurable, catalog-grounded candidates; LLM components are used as controlled augmentation for structured parsing, profile summaries, candidate-constrained generation/reranking, and evidence-grounded explanations. It is not production software or production performance evidence.
+The current experiments use synthetic debug data and deterministic mock LLM clients by default. The reported results demonstrate system behavior, reproducibility, model-comparison workflows, and safety constraints rather than production performance; this is not production software.
 
-Current experiments use a small synthetic debug dataset and deterministic mock LLM clients. No external API key is required for the default workflow. The API and dashboard are local demo surfaces, not a production deployment.
+## Why This System Exists
 
-## Why This Project
+Search and recommendation systems need more than a single collaborative-filtering model. A practical discovery stack has to understand query intent, retrieve broad candidate sets, combine personalization signals, rank candidates with richer features, handle cold-start items, validate generated outputs, and expose results through service surfaces that can be tested.
 
-Simple recommendation demos often stop at collaborative filtering over a static ratings matrix. Real discovery systems need more layers: query interpretation, candidate retrieval, personalization, sequential behavior, content representation, ranking, validation, serving, and safe handling of generated outputs.
-
-SearchRec-LLM implements those layers in a reproducible local repository. It is relevant to large-scale recommendation systems, e-commerce search and discovery, content recommendation, product retrieval and ranking, personalized recommendation, sequential user modeling, generative recommendation, and search/recommendation infrastructure. It uses synthetic, publicly shareable examples only and does not depend on proprietary platform data or confidential system details.
-
-## Key Capabilities
-
-| Area | Implemented capabilities |
-| --- | --- |
-| Data | Synthetic users, items, implicit interactions, temporal splits, user sequences, negative samples, query-item pairs |
-| Query understanding | Rule-based parsing plus mock-first structured LLM parsing, query rewriting, and expansion |
-| Search retrieval | BM25, local TF-IDF dense retrieval, FAISS-style interface with NumPy fallback, hybrid score fusion |
-| Recommendation | Popularity, itemCF, matrix factorization, user-history embedding |
-| Sequential modeling | GRU4Rec and SASRec next-item baselines |
-| Ranking | Ranking candidate generation, feature ranker, LightGBM-compatible wrapper, PyTorch MLP, tiny local cross-encoder, deterministic mixed ranker |
-| Content representation | Text encoder, metadata encoder, optional image-feature interface, text/metadata fusion, cold-start and long-tail slices |
-| GenRec | Direct generation baseline, candidate-constrained generation, LLM reranking, output parsing, fallback to ranked candidates |
-| Safety and explanations | Item-ID validation, hallucination checks, template explanations, evidence-grounded mock explanations |
-| Evaluation | Component-specific result CSVs, final leaderboard, model-selection reports, latency-quality reports |
-| Serving | FastAPI endpoints and Streamlit dashboard over local artifacts |
+SearchRec-LLM implements those concerns as separable local components. Each layer writes artifacts, has focused tests, and is evaluated with task-specific metrics, so the repository can be inspected as a system rather than as a one-off notebook.
 
 ## System Architecture
 
 ```mermaid
 flowchart TD
-    A["Synthetic users, items, interactions"] --> B["Splits, sequences, negatives"]
-    B --> C["Synthetic query-item pairs"]
-    C --> D["Rule-based and mock LLM query understanding"]
-    C --> E["BM25, TF-IDF, FAISS-style, hybrid retrieval"]
-    B --> F["Recommendation and sequence models"]
-    E --> G["Ranking candidates and ranking features"]
-    F --> G
-    D --> G
-    G --> H["Feature, MLP, cross-encoder, and mixed rankers"]
-    C --> I["Text and metadata item representations"]
-    I --> H
-    H --> J["Candidate-constrained GenRec and LLM reranking"]
-    D --> J
-    J --> K["Validation reports and final leaderboard"]
-    H --> K
-    K --> L["FastAPI service"]
-    K --> M["Streamlit dashboard"]
-    J --> L
-    J --> M
+    A["Users / Items / Interactions / Queries"] --> B["Query Understanding"]
+    B --> C["Candidate Retrieval"]
+    A --> D["Recommendation and Sequential Signals"]
+    C --> E["Feature Generation"]
+    D --> E
+    E --> F["Multi-Stage Ranking"]
+    A --> G["Text-and-Metadata Enrichment"]
+    G --> F
+    F --> H["Candidate-Constrained GenRec"]
+    H --> I["Validation, Hallucination Checks, and Fallback"]
+    I --> J["FastAPI / Streamlit"]
 ```
 
-## Design Principles
+The default workflow is intentionally local: synthetic data, Pandas/NumPy artifacts, PyTorch debug models, optional FAISS-style retrieval with NumPy fallback, LightGBM-compatible ranking with a NumPy fallback backend, and mock LLM clients unless an external provider is configured.
 
-- Local-first and reproducible: the default workflow runs on synthetic data with local artifacts.
-- Baseline-first: lexical, collaborative, sequence, and ranking baselines are implemented before LLM augmentation.
-- Validation-driven: model choices are based on result CSVs and component-specific metrics.
-- Retrieval and ranking remain the measurable core; LLMs augment rather than replace them.
-- Generated recommendations are candidate-constrained and validated against known item IDs.
-- Optional backends have safe fallbacks: NumPy for FAISS-style search, NumPy linear ranking for the LightGBM-compatible wrapper, and mock clients for LLM workflows.
-- Limitations are explicit: synthetic data, mock LLMs, no real image signal, local serving, and no production or business-impact claims.
+## Design Intuition
+
+- Candidate retrieval before ranking: retrieval reduces a large catalog to a manageable candidate set with high recall and low latency; ranking can then apply richer features to fewer items.
+- Baseline-first modeling: BM25, popularity, ItemCF, matrix factorization, and simple rankers provide interpretable reference points before heavier models are compared.
+- Sequential user modeling: user intent depends on recent ordered behavior, so GRU4Rec and SASRec model temporal next-item signals beyond static profiles.
+- Content for cold start: behavior-only methods struggle with sparse items; text and structured metadata provide item representations before enough interactions exist.
+- LLM as controlled augmentation: LLM components parse queries, summarize profiles, rerank candidates, generate constrained recommendations, and produce evidence-grounded explanations without freely searching the catalog.
+- Candidate-constrained GenRec: direct generation may invent invalid items; constrained generation restricts output to valid candidate IDs, validates structured responses, and falls back to deterministic ranking when constraints fail.
+- Validation-driven selection: each component is evaluated with task-specific metrics instead of selecting models arbitrarily.
+
+## Key Capabilities
+
+| Area | Implemented capabilities |
+| --- | --- |
+| Data | Synthetic users, items, implicit interactions, temporal split, user sequences, negative samples, query-item pairs |
+| Query Processing | Synthetic query generation, rule-based parsing, structured mock-LLM understanding, query rewriting and expansion |
+| Candidate Retrieval | BM25, TF-IDF vector retrieval, FAISS-compatible NumPy fallback, hybrid fusion |
+| Recommendation | Popularity, ItemCF, matrix factorization, user-history content profiles |
+| Sequential Modeling | GRU4Rec and SASRec next-item prediction |
+| Ranking | Numeric feature ranker, LightGBM-compatible wrapper, PyTorch MLP, local cross-encoder, mixed reranking |
+| Content Representation | Text encoding, structured metadata encoding, fusion, optional image-feature interface |
+| GenRec | Direct baseline, candidate-constrained generation, candidate reranking, JSON validation and fallback |
+| Safety | Catalog validation, hallucination detection, evidence-grounded explanations |
+| Evaluation | Component-specific metrics, final leaderboard, latency-quality reports, error taxonomy |
+| Serving | FastAPI endpoints, Streamlit dashboard, Docker configuration |
+
+## Results at a Glance
+
+The table summarizes the selected local baseline for each component. All experiments use the synthetic debug dataset, and metrics measure different tasks, so values are not directly comparable across rows. LLM and GenRec rows use deterministic mock clients by default.
+
+| Component | Selected local baseline | Verified result |
+| --- | --- | --- |
+| Candidate Retrieval | BM25 | Recall@50 = `1.0000`, MRR@10 = `0.2288` |
+| Recommendation | ItemCF | NDCG@10 = `0.0557`, Recall@10 = `0.1200` |
+| Sequential Recommendation | SASRec | NDCG@10 = `0.0297`, MRR@10 = `0.0200` |
+| Ranking | LightGBM-compatible wrapper (`numpy_linear` backend) | NDCG@10 = `0.2999`, MRR@10 = `0.2274` |
+| Structured Query Understanding | Mock LLM query parser | Schema-valid rate = `1.0000`, intent-match rate = `1.0000` |
+| Text-and-Metadata Representation | Text + metadata fusion | NDCG@10 = `0.2930`, cold-start Recall@10 = `0.4444` |
+| Candidate-Constrained GenRec | Candidate-constrained generation with mock LLM | Valid-item rate = `1.0000`, hallucination rate = `0.0000` |
+
+In the local mock-LLM evaluation, direct generation produced a valid-item rate of `0.9000` and a hallucination rate of `0.1000`, while candidate-constrained generation achieved `1.0000` and `0.0000`, respectively. This motivates the catalog-grounded, candidate-constrained design.
+
+Detailed results:
+
+- [Final Results Summary](docs/final_results_summary.md)
+- [Final Leaderboard](validation/results/final_leaderboard.csv)
+- [Model Selection Report](validation/reports/final_model_selection_report.md)
+- [GenRec Design Decision](validation/reports/final_llm_decision.md)
 
 ## Repository Structure
 
@@ -83,7 +98,7 @@ app/api/             FastAPI service
 app/dashboard/       Streamlit dashboard
 validation/          Experiments, results, reports, ablations, error analysis
 tests/               Unit and integration tests
-docs/                Technical, reproducibility, demo, and career documentation
+docs/                Technical, reproducibility, evaluation, and demo documentation
 ```
 
 ## Quickstart
@@ -91,6 +106,9 @@ docs/                Technical, reproducibility, demo, and career documentation
 Python 3.10 or newer is required.
 
 ```bash
+git clone https://github.com/ZikunZheng1129/searchrec-llm.git
+cd searchrec-llm
+
 python3.10 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
@@ -100,31 +118,25 @@ python -m pip install -e .
 
 If `python3.10` is not available, use another Python 3.10+ interpreter.
 
-## Run Tests
+Run the verification suite:
 
 ```bash
 python -m pytest tests/
 python -m ruff check .
 python -m ruff format --check .
+bash scripts/check_project_package.sh
 ```
 
-The Makefile also supports:
+## Reproduce the Local Workflow
 
-```bash
-make test
-make lint
-```
-
-## Reproduce Local Artifacts
-
-Minimal local data and query setup:
+Build the minimal synthetic dataset and query artifacts:
 
 ```bash
 python3 src/pipelines/build_dataset.py --config configs/data/debug_sample.yaml
 python3 src/pipelines/generate_queries.py --config configs/data/query_generation_debug.yaml
 ```
 
-Generate the final validation leaderboard and reports from existing result CSVs:
+Regenerate the final validation leaderboard and Markdown reports from existing result CSVs:
 
 ```bash
 python3 src/pipelines/generate_validation_report.py --config validation/experiments/stage5_debug_validation.yaml
@@ -132,7 +144,7 @@ python3 src/pipelines/generate_validation_report.py --config validation/experime
 
 For capability-by-capability commands across retrieval, recommendation, sequence models, ranking, LLM query/profile generation, text/metadata representations, GenRec, reports, and package checks, see [docs/reproducibility.md](docs/reproducibility.md).
 
-## Run The Demo
+## Run the API and Dashboard
 
 Launch the API:
 
@@ -140,7 +152,7 @@ Launch the API:
 bash scripts/launch_api.sh
 ```
 
-Open `http://127.0.0.1:8000/docs`.
+API docs: `http://127.0.0.1:8000/docs`
 
 Launch the dashboard:
 
@@ -148,41 +160,11 @@ Launch the dashboard:
 bash scripts/launch_dashboard.sh
 ```
 
-Open `http://localhost:8501`.
+Dashboard: `http://localhost:8501`
 
-Both demo surfaces read local artifacts and use the mock LLM path by default.
+Both demo surfaces read local artifacts and use mock LLM clients by default. No external API key is required, and models are not retrained per request.
 
-## Evaluation Snapshot
-
-Current metrics are from the checked-in synthetic debug artifacts. Metrics across different components are not directly comparable.
-
-| Component | Selected local baseline | Key metric |
-| --- | --- | --- |
-| Retrieval | `bm25` | Recall@50 1.000000; MRR@10 0.228785 |
-| Recommendation | `itemcf` | NDCG@10 0.055705; Recall@10 0.120000; Coverage@10 0.980000 |
-| Sequential recommendation | `sasrec` | NDCG@10 0.029743; MRR@10 0.020000; Coverage@10 0.670000 |
-| Ranking | `lightgbm` wrapper with `numpy_linear` backend | NDCG@10 0.299915; MRR@10 0.227442; Recall@10 0.538462 |
-| Structured query understanding | Mock LLM query parser | Schema-valid rate 1.000000; intent-match rate 1.000000; category-match rate 0.923077 |
-| Text/metadata representation | `text_metadata_fusion` | NDCG@10 0.292996; Recall@10 0.538462; cold-start Recall@10 0.444444 |
-| GenRec safety | `candidate_constrained_generation` with mock client | Valid item rate 1.000000; hallucination rate 0.000000; NDCG@10 0.245409 |
-
-Important caveats:
-
-- Results use a synthetic debug dataset.
-- LLM metrics use deterministic mock clients by default.
-- The LightGBM-compatible result above used the NumPy linear fallback in the inspected local experiment.
-- The FAISS-style retriever used the NumPy backend in the inspected local experiment.
-- The current content representation uses text and metadata; no real image embeddings are present.
-- Explanation faithfulness is measured by a local rule-based checker, not human evaluation.
-
-More detail:
-
-- [docs/final_results_summary.md](docs/final_results_summary.md)
-- [validation/results/final_leaderboard.csv](validation/results/final_leaderboard.csv)
-- [validation/reports/final_model_selection_report.md](validation/reports/final_model_selection_report.md)
-- [validation/reports/final_llm_decision.md](validation/reports/final_llm_decision.md)
-
-## API Endpoints
+## API Surface
 
 Local OpenAPI docs are available at `http://127.0.0.1:8000/docs` after launching the API.
 
@@ -200,39 +182,35 @@ See [docs/api_reference.md](docs/api_reference.md).
 
 ## Documentation
 
-Core:
+Architecture and Models:
 
-- [Project overview](docs/project_overview.md)
-- [System design](docs/system_design.md)
-- [Model design](docs/model_design.md)
-- [Technical reference](docs/technical_reference.md)
-- [Evaluation plan](docs/evaluation_plan.md)
-- [Final report](docs/final_report.md)
-- [Results summary](docs/final_results_summary.md)
-- [Limitations and future work](docs/limitations_and_future_work.md)
-- [Reproducibility](docs/reproducibility.md)
+- [Project Overview](docs/project_overview.md)
+- [System Design](docs/system_design.md)
+- [Model Design](docs/model_design.md)
+- [Data Schema](docs/data_schema.md)
+- [Technical Reference](docs/technical_reference.md)
 
-Demo:
+Evaluation and Results:
 
-- [Demo guide](docs/demo_guide.md)
-- [API reference](docs/api_reference.md)
-- [Dashboard guide](docs/dashboard_guide.md)
-- [Demo script](docs/demo_script.md)
+- [Evaluation Plan](docs/evaluation_plan.md)
+- [Final Results Summary](docs/final_results_summary.md)
+- [Final Report](docs/final_report.md)
+- [Limitations and Future Work](docs/limitations_and_future_work.md)
 
-Career:
+Reproducibility and Demo:
 
-- [Resume bullets](docs/resume_bullets.md)
-- [Interview talking points](docs/interview_talking_points.md)
-- [Interview Q&A](docs/interview_q_and_a.md)
-- [Project pitch](docs/project_pitch.md)
-- [Recruiter summary](docs/recruiter_summary.md)
-- [LinkedIn project description](docs/linkedin_project_description.md)
+- [Reproducibility Guide](docs/reproducibility.md)
+- [Demo Guide](docs/demo_guide.md)
+- [API Reference](docs/api_reference.md)
+- [Dashboard Guide](docs/dashboard_guide.md)
+- [Demo Script](docs/demo_script.md)
 
 ## Limitations
 
 - Synthetic debug data only.
 - Deterministic mock LLM clients by default.
 - No real product images or image embeddings in reported experiments.
+- Text-and-metadata fusion is not real visual multimodal learning.
 - No real query-user logs; query ranking is primarily relevance/content/business-proxy ranking.
 - Local API and dashboard demo only.
 - No online A/B testing, production monitoring, or load testing.
@@ -250,7 +228,3 @@ Career:
 - Real-LLM prompt/provider evaluation.
 - Human evaluation for explanations and generated recommendations.
 - API load testing, monitoring, and deployment hardening.
-
-## Project Status
-
-The repository is complete as a local portfolio and demonstration system. It includes reproducible pipelines, tests, validation reports, a local API, and an interactive dashboard. The current experiments are intentionally small and synthetic.

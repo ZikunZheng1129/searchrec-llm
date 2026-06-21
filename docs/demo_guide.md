@@ -54,4 +54,4 @@ pipeline command to regenerate it.
 ## Caveat
 
 All current data is synthetic debug data. The demo is for local system behavior
-and interview walkthroughs, not production performance claims.
+inspection, not production performance claims.

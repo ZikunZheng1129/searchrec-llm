@@ -42,7 +42,7 @@ Important columns include:
   score.
 
 Business features are synthetic proxies from the debug data. They are useful for
-portfolio modeling mechanics, not GMV or production-business claims.
+local modeling mechanics, not GMV or production-business claims.
 
 ## Rankers
 

@@ -48,7 +48,7 @@ FastAPI + Streamlit Demo
 - `app/api/`: FastAPI service layer.
 - `app/dashboard/`: Streamlit dashboard and demo pages.
 - `validation/`: experiment templates, result CSVs, reports, ablations, and error-analysis templates.
-- `docs/`: technical docs and final portfolio package.
+- `docs/`: technical docs, reproducibility notes, evaluation summaries, and demo guides.
 
 ## Data Flow
 
@@ -60,11 +60,11 @@ Pipeline outputs are written to stable paths such as `data/processed/`, `data/in
 
 ## Serving Flow
 
-The FastAPI service reads local artifacts and exposes health, search, recommendation, query-understanding, GenRec, leaderboard, business-metric, and error-taxonomy endpoints. The Streamlit dashboard calls the same local artifacts and provides an interview-friendly walkthrough across search, LLM understanding, ranking, GenRec, validation, and proxy business metrics.
+The FastAPI service reads local artifacts and exposes health, search, recommendation, query-understanding, GenRec, leaderboard, business-metric, and error-taxonomy endpoints. The Streamlit dashboard calls the same local artifacts and provides a local technical walkthrough across search, LLM understanding, ranking, GenRec, validation, and proxy business metrics.
 
 ## Local-First Design
 
-The default path uses synthetic data, NumPy/Pandas, local PyTorch debug models, optional FAISS fallback, and deterministic mock LLM clients. No API key is required by default. This makes the project runnable on a laptop and suitable for reproducible portfolio review.
+The default path uses synthetic data, NumPy/Pandas, local PyTorch debug models, optional FAISS fallback, and deterministic mock LLM clients. No API key is required by default. This makes the project runnable on a laptop and suitable for reproducible technical review.
 
 ## Colab/GPU Path
 

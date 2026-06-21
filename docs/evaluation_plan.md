@@ -57,7 +57,7 @@ No fake metrics are created. If a future results file is absent, it is skipped i
 
 ## Synthetic-Data Caveat
 
-All current metrics are computed on a small synthetic debug dataset with deterministic mock LLM behavior by default. They validate implementation quality, system wiring, evaluation discipline, fallback logic, and portfolio readiness. They are not production performance, production latency, or real user-impact claims.
+All current metrics are computed on a small synthetic debug dataset with deterministic mock LLM behavior by default. They validate implementation quality, system wiring, evaluation discipline, fallback logic, and local reproducibility. They are not production performance, production latency, or real user-impact claims.
 
 ## Future Real-Data Evaluation Plan
 

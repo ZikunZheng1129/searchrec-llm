@@ -26,7 +26,7 @@ views. The current pages default to local artifact mode for reliability.
 Use the artifact status table on the landing page. Missing rows include command
 hints for the pipeline command that creates the file.
 
-## Interview Demo Script
+## Technical Demo Flow
 
 1. Open the Search Demo and show ranked candidates.
 2. Open LLM Query Understanding and show structured mock output.

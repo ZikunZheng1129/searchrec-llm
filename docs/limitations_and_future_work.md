@@ -38,6 +38,6 @@
 6. Run human evaluation before relying on generated explanations.
 7. Add latency budgets and dashboarded operational metrics.
 
-## What To Say In Interviews
+## Recommended Framing
 
-The honest framing is: "This is a production-style local system, not a production system. It demonstrates how I would structure data, retrieval, recommendation, ranking, LLM augmentation, validation, and serving. The current metrics are from synthetic debug data, so they validate the pipeline and comparison framework rather than real-world performance."
+This is a production-style local system, not a production system. It demonstrates one way to structure data, retrieval, recommendation, ranking, LLM augmentation, validation, and serving. The current metrics are from synthetic debug data, so they validate the pipeline and comparison framework rather than real-world performance.

@@ -1,6 +1,6 @@
 # Demo Script
 
-This guide is for interviews and portfolio walkthroughs. The demo uses synthetic debug data and mock LLM outputs by default. No external API key is required.
+This guide provides a local technical walkthrough for the API and dashboard. The demo uses synthetic debug data and mock LLM outputs by default. No external API key is required.
 
 ## Setup
 
@@ -44,7 +44,7 @@ These are examples for the synthetic catalog. If a query returns sparse results,
 
 ## Demo Flow
 
-1. Open the dashboard landing page and mention the synthetic/mock caveat.
+1. Open the dashboard landing page and verify the synthetic/mock caveat.
 2. Show artifact status to prove the demo reads local generated outputs.
 3. Run a search query and explain BM25/dense/hybrid retrieval.
 4. Show LLM query understanding and explain structured JSON outputs.
@@ -54,9 +54,9 @@ These are examples for the synthetic catalog. If a query returns sparse results,
 8. Show model comparison and latency/quality tradeoffs.
 9. Show error analysis and business/proxy metrics.
 
-## Two-Minute Pitch
+## System Summary
 
-"SearchRec-LLM is a local production-style discovery system. It starts with synthetic user/item data, builds retrieval, recommendation, sequence, ranking, LLM understanding, text/metadata representation, and GenRec layers, validates each layer with standardized metrics, and serves the result through FastAPI and Streamlit. The key design choice is candidate-constrained GenRec: the LLM can help rerank and explain, but final recommendations stay grounded in retrieved catalog candidates."
+SearchRec-LLM is a local production-style discovery system. It starts with synthetic user/item data, builds retrieval, recommendation, sequence, ranking, LLM understanding, text/metadata representation, and GenRec layers, validates each layer with standardized metrics, and serves the result through FastAPI and Streamlit. The key design choice is candidate-constrained GenRec: the LLM can help rerank and explain, but final recommendations stay grounded in retrieved catalog candidates.
 
 ## Five-Minute Technical Walkthrough
 
@@ -78,14 +78,14 @@ Spend extra time on:
 - How metrics are selected per component and not compared globally.
 - How this would scale with real logs, real embeddings, FAISS, and online evaluation.
 
-## If Asked About Limitations
+## Limitations
 
-"The biggest limitation is that current metrics are from synthetic debug data. I use them to validate the pipeline and model-selection framework, not to claim production performance. The next step would be a larger public dataset, real embeddings, true ANN retrieval, human evaluation, and API load testing."
+The biggest limitation is that current metrics are from synthetic debug data. They validate the pipeline and model-selection framework, not production performance. Next steps would include a larger public dataset, real embeddings, true ANN retrieval, human evaluation, and API load testing.
 
-## If Asked Why Mock LLM Is Used
+## Mock LLM Rationale
 
-"Mock LLMs keep the default demo deterministic, free, and safe to run without API keys. The code has provider abstractions, but the portfolio default should be reproducible for any reviewer."
+Mock LLMs keep the default demo deterministic and safe to run without API keys. The code has provider abstractions, while the default path remains reproducible in a local environment.
 
-## If Asked How This Would Scale
+## Scaling Path
 
-"I would replace debug data with real logs or a larger public dataset, move dense retrieval to FAISS, cache candidate sets, train larger sequence/ranking models on GPU, add real image embeddings, add prompt/provider evaluation, and track latency budgets with production-style monitoring."
+Future scaling work would replace debug data with real logs or a larger public dataset, move dense retrieval to FAISS, cache candidate sets, train larger sequence/ranking models on GPU, add real image embeddings, add prompt/provider evaluation, and track latency budgets with production-style monitoring.

@@ -13,14 +13,12 @@ REQUIRED_DOCS = [
     "docs/project_completion_audit.md",
     "docs/limitations_and_future_work.md",
     "docs/demo_script.md",
+    "docs/demo_guide.md",
+    "docs/api_reference.md",
+    "docs/dashboard_guide.md",
+    "docs/reproducibility.md",
+    "docs/technical_reference.md",
     "docs/colab_training_plan.md",
-    "docs/github_portfolio_checklist.md",
-    "docs/resume_bullets.md",
-    "docs/interview_talking_points.md",
-    "docs/interview_q_and_a.md",
-    "docs/project_pitch.md",
-    "docs/recruiter_summary.md",
-    "docs/linkedin_project_description.md",
 ]
 
 
@@ -28,7 +26,7 @@ def _read(path: str) -> str:
     return Path(path).read_text(encoding="utf-8")
 
 
-def test_stage12_required_docs_exist_and_are_nonempty():
+def test_required_project_docs_exist_and_are_nonempty():
     for path in REQUIRED_DOCS:
         doc_path = Path(path)
         assert doc_path.exists(), path
@@ -49,8 +47,8 @@ def test_important_docs_include_synthetic_mock_and_not_production_caveats():
         assert "not production" in text, path
 
 
-def test_resume_bullets_avoid_forbidden_overclaims():
-    text = _read("docs/resume_bullets.md").lower()
+def test_project_docs_avoid_forbidden_overclaims():
+    text = "\n".join(_read(path).lower() for path in REQUIRED_DOCS)
     forbidden_phrases = [
         "production deployed",
         "real tiktok data",
