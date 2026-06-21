@@ -1,0 +1,28 @@
+seed: 42
+
+input:
+  ranking_candidates_path: data/processed/ranking_candidates.parquet
+
+output:
+  model_path: artifacts/models/ranking/lightgbm_ranker_debug.pkl
+  results_path: validation/results/ranking_results.csv
+
+ranking:
+  method: lightgbm
+  backend: auto
+  fallback_backend: numpy_linear
+  top_k: 20
+  label_column: label
+  group_column: query_id
+
+training:
+  learning_rate: 0.05
+  num_boost_round: 30
+  num_epochs_fallback: 100
+  regularization: 0.001
+
+evaluation:
+  split: test
+  k_values:
+    - 10
+    - 20

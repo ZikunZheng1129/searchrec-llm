@@ -1,0 +1,13 @@
+numpy
+pandas
+pyyaml
+python-dotenv
+pytest
+ruff
+pyarrow
+torch
+fastapi
+uvicorn
+streamlit
+requests
+httpx

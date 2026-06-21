@@ -1,0 +1,31 @@
+seed: 42
+
+input:
+  train_path: data/processed/train.parquet
+  val_path: data/processed/val.parquet
+  test_path: data/processed/test.parquet
+  item_metadata_path: data/processed/item_metadata.parquet
+
+output:
+  results_path: validation/results/recommender_baselines.csv
+
+recommendation:
+  method: user_history_embedding
+  top_k: 10
+  exclude_seen: true
+
+evaluation:
+  split: test
+  k_values:
+    - 10
+    - 20
+
+user_history_embedding:
+  text_fields:
+    - title
+    - category
+    - brand
+    - description
+  vectorizer: tfidf
+  normalize: true
+  max_features: 5000

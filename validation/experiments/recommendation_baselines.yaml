@@ -1,0 +1,36 @@
+experiment_name: recommendation_baselines
+stage: recommendation
+description: Compare Stage 4 classic recommendation baselines on the synthetic debug split.
+
+input_files:
+  train: data/processed/train.parquet
+  val: data/processed/val.parquet
+  test: data/processed/test.parquet
+  item_metadata: data/processed/item_metadata.parquet
+
+output_files:
+  recommender_results: validation/results/recommender_baselines.csv
+
+configs_to_run:
+  - configs/recommendation/popularity_debug.yaml
+  - configs/recommendation/itemcf_debug.yaml
+  - configs/recommendation/matrix_factorization_debug.yaml
+  - configs/recommendation/user_history_embedding_debug.yaml
+
+primary_metrics:
+  - hit_rate_at_10
+  - recall_at_10
+  - ndcg_at_10
+  - mrr_at_10
+  - coverage_at_10
+  - avg_latency_ms
+
+selection_rule:
+  - prioritize ndcg_at_10
+  - then recall_at_10
+  - then coverage_at_10
+  - then lower avg_latency_ms
+
+notes:
+  - Classic recommenders only.
+  - No deep sequential models yet.

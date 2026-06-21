@@ -1,0 +1,24 @@
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    command: uvicorn app.api.main:app --host 0.0.0.0 --port 8000
+    environment:
+      TIKSEARCHREC_API_CONFIG: configs/app/api_debug.yaml
+    ports:
+      - "8000:8000"
+    volumes:
+      - ..:/app
+
+  dashboard:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    command: streamlit run app/dashboard/streamlit_app.py --server.address 0.0.0.0
+    environment:
+      TIKSEARCHREC_DASHBOARD_CONFIG: configs/app/dashboard_debug.yaml
+    ports:
+      - "8501:8501"
+    volumes:
+      - ..:/app

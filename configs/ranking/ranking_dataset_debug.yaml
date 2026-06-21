@@ -1,0 +1,38 @@
+seed: 42
+
+input:
+  item_metadata_path: data/processed/item_metadata.parquet
+  query_item_pairs_path: data/processed/query_item_pairs.parquet
+  train_interactions_path: data/processed/train.parquet
+  val_interactions_path: data/processed/val.parquet
+  test_interactions_path: data/processed/test.parquet
+
+output:
+  ranking_candidates_path: data/processed/ranking_candidates.parquet
+
+candidate_generation:
+  retriever: hybrid
+  candidate_pool_size: 50
+  random_negatives_per_query: 10
+  ensure_positive_candidate: true
+
+features:
+  include_retrieval_scores: true
+  include_text_match_features: true
+  include_item_metadata_features: true
+  include_business_proxy_features: true
+  include_diversity_features: true
+  include_sequence_features: false
+
+retrieval:
+  bm25:
+    k1: 1.5
+    b: 0.75
+  dense:
+    vectorizer: tfidf
+    normalize: true
+    max_features: 5000
+  hybrid:
+    bm25_weight: 0.5
+    dense_weight: 0.5
+    score_normalization: minmax

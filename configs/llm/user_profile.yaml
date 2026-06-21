@@ -1,0 +1,48 @@
+seed: 42
+
+input:
+  train_path: data/processed/train.parquet
+  val_path: data/processed/val.parquet
+  test_path: data/processed/test.parquet
+  item_metadata_path: data/processed/item_metadata.parquet
+
+output:
+  user_profiles_path: data/processed/user_profiles.parquet
+  user_profile_embeddings_path: data/processed/user_profile_embeddings.parquet
+  results_path: validation/results/user_profile_results.csv
+
+llm:
+  client: mock
+  provider: mock
+  model: mock-user-profile-v1
+  temperature: 0.0
+  max_tokens: 512
+  timeout_seconds: 30
+  allow_external_api_calls: false
+
+user_profile:
+  users_split: train
+  max_users: null
+  min_history_items: 1
+  include_recent_items: true
+  max_recent_items: 5
+  include_top_categories: true
+  include_top_brands: true
+  include_price_preference: true
+  include_behavior_summary: true
+
+profile_embedding:
+  method: bag_of_words
+  max_features: 512
+  normalize: true
+
+evaluation:
+  metrics:
+    - profile_generation_success_rate
+    - schema_valid_rate
+    - profile_nonempty_rate
+    - embedding_coverage
+    - avg_profile_length
+    - avg_latency_ms
+    - p95_latency_ms
+    - estimated_cost_per_1000_users

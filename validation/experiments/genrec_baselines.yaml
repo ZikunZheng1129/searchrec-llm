@@ -1,0 +1,53 @@
+experiment_name: genrec_baselines
+stage: genrec
+description: >
+  Stage 10 local GenRec experiments comparing unsafe direct generation,
+  candidate-constrained generation, LLM reranking, and evidence-grounded
+  explanations on the synthetic debug dataset.
+
+input_files:
+  - data/processed/query_item_pairs.parquet
+  - data/processed/item_metadata.parquet
+  - data/processed/ranking_candidates.parquet
+  - data/processed/ranking_candidates_multimodal.parquet
+  - data/processed/llm_query_understanding.parquet
+  - data/processed/user_profiles.parquet
+
+output_files:
+  - data/processed/genrec_outputs.parquet
+  - data/processed/llm_rerank_outputs.parquet
+  - data/processed/recommendation_explanations.parquet
+  - validation/results/genrec_results.csv
+  - validation/reports/final_llm_decision.md
+
+configs:
+  - configs/genrec/direct_generator_debug.yaml
+  - configs/genrec/constrained_generator_debug.yaml
+  - configs/genrec/llm_reranker_debug.yaml
+  - configs/genrec/explanation_debug.yaml
+  - configs/genrec/genrec_debug.yaml
+
+primary_metrics:
+  - valid_item_rate
+  - hallucination_rate
+  - output_parse_success_rate
+  - ndcg_at_10
+  - mrr_at_10
+  - explanation_faithfulness
+  - avg_latency_ms
+  - estimated_cost_per_1000_queries
+
+selection_rule:
+  - require low hallucination_rate
+  - prioritize valid_item_rate
+  - then output_parse_success_rate
+  - then ndcg_at_10
+  - then explanation_faithfulness
+  - then lower avg_latency_ms
+
+notes:
+  - default client is mock
+  - no API key required for tests
+  - direct generation is a baseline only
+  - final design should be candidate-constrained
+  - metrics use synthetic debug data

@@ -1,0 +1,32 @@
+experiment_name: retrieval_baselines
+stage: retrieval
+description: Compare Stage 3 local retrieval baselines on synthetic query-item pairs.
+
+input_files:
+  item_metadata: data/processed/item_metadata.parquet
+  query_item_pairs: data/processed/query_item_pairs.parquet
+
+output_files:
+  retrieval_results: validation/results/retrieval_results.csv
+
+configs_to_run:
+  - configs/retrieval/bm25_debug.yaml
+  - configs/retrieval/dense_debug.yaml
+  - configs/retrieval/faiss_debug.yaml
+  - configs/retrieval/hybrid_retrieval.yaml
+
+primary_metrics:
+  - recall_at_50
+  - mrr_at_10
+  - query_coverage
+  - avg_latency_ms
+
+selection_rule:
+  - prioritize recall_at_50
+  - then mrr_at_10
+  - then lower avg_latency_ms
+
+notes:
+  - Synthetic query-item pairs.
+  - Local debug dataset.
+  - FAISS is optional and can use NumPy fallback.

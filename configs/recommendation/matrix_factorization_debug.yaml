@@ -1,0 +1,28 @@
+seed: 42
+
+input:
+  train_path: data/processed/train.parquet
+  val_path: data/processed/val.parquet
+  test_path: data/processed/test.parquet
+  item_metadata_path: data/processed/item_metadata.parquet
+
+output:
+  results_path: validation/results/recommender_baselines.csv
+
+recommendation:
+  method: matrix_factorization
+  top_k: 10
+  exclude_seen: true
+
+evaluation:
+  split: test
+  k_values:
+    - 10
+    - 20
+
+matrix_factorization:
+  factors: 16
+  epochs: 20
+  learning_rate: 0.05
+  regularization: 0.01
+  negative_samples: 3

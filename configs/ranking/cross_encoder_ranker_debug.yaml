@@ -1,0 +1,36 @@
+seed: 42
+
+input:
+  ranking_candidates_path: data/processed/ranking_candidates.parquet
+  item_metadata_path: data/processed/item_metadata.parquet
+
+output:
+  model_path: artifacts/models/ranking/cross_encoder_ranker_debug.pt
+  results_path: validation/results/ranking_results.csv
+
+ranking:
+  method: cross_encoder
+  top_k: 20
+  label_column: label
+  group_column: query_id
+
+model:
+  max_pair_len: 64
+  vocab_size: 5000
+  embedding_dim: 32
+  num_heads: 2
+  num_layers: 1
+  dropout: 0.1
+
+training:
+  device: cpu
+  epochs: 3
+  batch_size: 32
+  learning_rate: 0.001
+  weight_decay: 0.0
+
+evaluation:
+  split: test
+  k_values:
+    - 10
+    - 20

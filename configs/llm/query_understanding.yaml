@@ -1,0 +1,44 @@
+seed: 42
+
+input:
+  query_item_pairs_path: data/processed/query_item_pairs.parquet
+  item_metadata_path: data/processed/item_metadata.parquet
+
+output:
+  parsed_queries_path: data/processed/llm_query_understanding.parquet
+  results_path: validation/results/llm_query_understanding_results.csv
+
+llm:
+  client: mock
+  provider: mock
+  model: mock-query-understanding-v1
+  temperature: 0.0
+  max_tokens: 512
+  timeout_seconds: 30
+  allow_external_api_calls: false
+
+query_understanding:
+  split: test
+  max_queries: null
+  compare_against_rule_based: true
+  include_query_rewrite: true
+  include_query_expansion: true
+  max_expanded_queries: 3
+  known_categories_from_items: true
+  known_brands_from_items: true
+
+evaluation:
+  k_values:
+    - 10
+  metrics:
+    - output_parse_success_rate
+    - schema_valid_rate
+    - intent_match_rate
+    - category_match_rate
+    - brand_match_rate
+    - price_constraint_match_rate
+    - use_case_match_rate
+    - avg_expanded_queries
+    - avg_latency_ms
+    - p95_latency_ms
+    - estimated_cost_per_1000_queries

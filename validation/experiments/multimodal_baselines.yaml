@@ -1,0 +1,46 @@
+experiment_name: stage9_multimodal_baselines
+stage: multimodal
+description: >
+  Build local text, metadata, and fused item representations, evaluate
+  retrieval-style query-item matching, and track cold-start and long-tail slices.
+
+input_files:
+  - data/processed/item_metadata.parquet
+  - data/processed/query_item_pairs.parquet
+  - data/processed/train.parquet
+  - data/processed/ranking_candidates.parquet
+
+output_files:
+  - data/embeddings/item_text_embeddings.parquet
+  - data/embeddings/item_metadata_embeddings.parquet
+  - data/embeddings/item_multimodal_embeddings.parquet
+  - data/processed/ranking_candidates_multimodal.parquet
+  - validation/results/multimodal_results.csv
+
+configs:
+  - configs/multimodal/text_only_debug.yaml
+  - configs/multimodal/metadata_only_debug.yaml
+  - configs/multimodal/text_metadata_fusion_debug.yaml
+  - configs/multimodal/multimodal_fusion_debug.yaml
+
+primary_metrics:
+  - ndcg_at_10
+  - recall_at_10
+  - cold_start_recall_at_10
+  - long_tail_coverage_at_10
+  - catalog_coverage_at_10
+  - category_diversity_at_10
+  - avg_latency_ms
+
+selection_rule:
+  - prioritize ndcg_at_10
+  - then cold_start_recall_at_10
+  - then recall_at_10
+  - then catalog_coverage_at_10
+  - then lower avg_latency_ms
+
+notes:
+  - local synthetic debug data
+  - text and metadata are required
+  - image features are optional and absent unless precomputed image features are provided
+  - no CLIP or external image downloads in Stage 9

@@ -1,0 +1,33 @@
+seed: 42
+
+app:
+  name: TikSearchRec-LLM API
+  version: 0.11.0
+  environment: local
+  host: 127.0.0.1
+  port: 8000
+  log_level: INFO
+
+artifacts:
+  item_metadata_path: data/processed/item_metadata.parquet
+  query_item_pairs_path: data/processed/query_item_pairs.parquet
+  ranking_candidates_path: data/processed/ranking_candidates.parquet
+  ranking_candidates_multimodal_path: data/processed/ranking_candidates_multimodal.parquet
+  llm_query_understanding_path: data/processed/llm_query_understanding.parquet
+  user_profiles_path: data/processed/user_profiles.parquet
+  genrec_outputs_path: data/processed/genrec_outputs.parquet
+  llm_rerank_outputs_path: data/processed/llm_rerank_outputs.parquet
+  explanations_path: data/processed/recommendation_explanations.parquet
+  final_leaderboard_path: validation/results/final_leaderboard.csv
+  retrieval_results_path: validation/results/retrieval_results.csv
+  recommender_results_path: validation/results/recommender_baselines.csv
+  ranking_results_path: validation/results/ranking_results.csv
+  genrec_results_path: validation/results/genrec_results.csv
+  error_taxonomy_path: validation/error_analysis/error_taxonomy.md
+
+demo:
+  default_top_k: 10
+  candidate_pool_size: 20
+  use_mock_llm: true
+  allow_external_api_calls: false
+  fallback_to_artifact_lookup: true

@@ -1,0 +1,29 @@
+seed: 42
+
+input:
+  ranking_candidates_path: data/processed/ranking_candidates.parquet
+
+output:
+  model_path: artifacts/models/ranking/mixed_ranker_debug.pkl
+  results_path: validation/results/ranking_results.csv
+
+ranking:
+  method: mixed
+  top_k: 20
+  label_column: label
+  group_column: query_id
+
+mixed:
+  relevance_weight: 0.65
+  authority_weight: 0.15
+  conversion_weight: 0.10
+  diversity_weight: 0.05
+  cold_start_weight: 0.05
+  base_score_column: hybrid_score
+  diversity_group_column: category
+
+evaluation:
+  split: test
+  k_values:
+    - 10
+    - 20

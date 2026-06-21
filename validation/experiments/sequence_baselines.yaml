@@ -1,0 +1,36 @@
+experiment_name: sequence_baselines
+stage: sequence
+description: Compare Stage 6 GRU4Rec and SASRec debug sequence baselines.
+
+input_files:
+  train: data/processed/train.parquet
+  val: data/processed/val.parquet
+  test: data/processed/test.parquet
+  item_metadata: data/processed/item_metadata.parquet
+
+output_files:
+  sequence_results: validation/results/sequence_results.csv
+  gru4rec_checkpoint: artifacts/models/sequence/gru4rec_debug.pt
+  sasrec_checkpoint: artifacts/models/sequence/sasrec_debug.pt
+
+configs_to_run:
+  - configs/sequence/gru4rec_debug.yaml
+  - configs/sequence/sasrec_debug.yaml
+
+primary_metrics:
+  - ndcg_at_10
+  - recall_at_10
+  - mrr_at_10
+  - coverage_at_10
+  - avg_latency_ms
+
+selection_rule:
+  - prioritize ndcg_at_10
+  - then recall_at_10
+  - then coverage_at_10
+  - then lower avg_latency_ms
+
+notes:
+  - Local synthetic debug data.
+  - CPU smoke-test configs.
+  - Larger configs are intended for Colab or GPU training later.

@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Environments
+.env
+.venv/
+venv/
+env/
+
+# Tooling caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Logs
+*.log
+
+# Data and generated artifacts
+data/raw/*
+!data/raw/.gitkeep
+data/interim/*
+!data/interim/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/embeddings/*
+!data/embeddings/.gitkeep
+data/indexes/*
+!data/indexes/.gitkeep
+
+artifacts/models/*
+!artifacts/models/.gitkeep
+artifacts/plots/*
+!artifacts/plots/.gitkeep
+artifacts/demo/*
+!artifacts/demo/.gitkeep
+
+validation/results/*
+!validation/results/.gitkeep
+!validation/results/retrieval_results.csv
+!validation/results/recommender_baselines.csv
+!validation/results/sequence_results.csv
+!validation/results/ranking_results.csv
+!validation/results/llm_query_understanding_results.csv
+!validation/results/user_profile_results.csv
+!validation/results/multimodal_results.csv
+!validation/results/genrec_results.csv
+!validation/results/final_leaderboard.csv
+
+# OS files
+.DS_Store

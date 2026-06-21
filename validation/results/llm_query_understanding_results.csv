@@ -1,0 +1,2 @@
+stage,method,provider,model,split,num_queries,output_parse_success_rate,schema_valid_rate,intent_match_rate,category_match_rate,brand_match_rate,price_constraint_match_rate,use_case_match_rate,avg_expanded_queries,avg_latency_ms,p95_latency_ms,estimated_cost_per_1000_queries,config_path
+llm_query_understanding,llm_query_understanding,mock,mock-query-understanding-v1,test,26,1.0,1.0,1.0,0.9230769230769231,0.15384615384615385,1.0,1.0,2.3846153846153846,0.09826288461538589,0.14802100000003982,0.0,configs/llm/query_understanding.yaml

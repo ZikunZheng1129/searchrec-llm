@@ -1,0 +1,2 @@
+stage,method,provider,model,num_users,profile_generation_success_rate,schema_valid_rate,profile_nonempty_rate,embedding_coverage,avg_profile_length,avg_latency_ms,p95_latency_ms,estimated_cost_per_1000_users,config_path
+llm_user_profile,llm_user_profile,mock,mock-user-profile-v1,50,1.0,1.0,1.0,1.0,10.98,0.017333299999997553,0.017397950000005987,0.0,configs/llm/user_profile.yaml

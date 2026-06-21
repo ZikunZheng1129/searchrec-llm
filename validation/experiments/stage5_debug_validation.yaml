@@ -1,0 +1,27 @@
+seed: 42
+
+inputs:
+  retrieval_results_path: validation/results/retrieval_results.csv
+  recommender_results_path: validation/results/recommender_baselines.csv
+
+optional_inputs:
+  sequence_results_path: validation/results/sequence_results.csv
+  ranking_results_path: validation/results/ranking_results.csv
+  multimodal_results_path: validation/results/multimodal_results.csv
+  genrec_results_path: validation/results/genrec_results.csv
+  llm_query_understanding_results_path: validation/results/llm_query_understanding_results.csv
+
+outputs:
+  final_leaderboard_path: validation/results/final_leaderboard.csv
+  final_model_selection_report_path: validation/reports/final_model_selection_report.md
+  latency_quality_report_path: validation/reports/latency_quality_tradeoff.md
+  validation_summary_path: validation/reports/validation_summary.md
+
+leaderboard:
+  include_stages:
+    - retrieval
+    - recommendation
+  sort_by:
+    - stage
+    - primary_score
+    - avg_latency_ms

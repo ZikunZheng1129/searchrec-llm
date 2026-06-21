@@ -1,0 +1,48 @@
+experiment_name: stage7_ranking_baselines
+stage: ranking
+description: >
+  Build local query-item ranking candidates from Stage 3 retrieval, train local
+  ranking baselines, and evaluate query-item relevance ranking on synthetic
+  debug query-item pairs.
+
+input_files:
+  - data/processed/item_metadata.parquet
+  - data/processed/query_item_pairs.parquet
+  - data/processed/train.parquet
+  - data/processed/ranking_candidates.parquet
+
+output_files:
+  - data/processed/ranking_candidates.parquet
+  - artifacts/models/ranking/lightgbm_ranker_debug.pkl
+  - artifacts/models/ranking/mlp_ranker_debug.pt
+  - artifacts/models/ranking/cross_encoder_ranker_debug.pt
+  - artifacts/models/ranking/mixed_ranker_debug.pkl
+  - validation/results/ranking_results.csv
+
+configs:
+  - configs/ranking/ranking_dataset_debug.yaml
+  - configs/ranking/lightgbm_ranker_debug.yaml
+  - configs/ranking/mlp_ranker_debug.yaml
+  - configs/ranking/cross_encoder_ranker_debug.yaml
+  - configs/ranking/mixed_ranker_debug.yaml
+
+primary_metrics:
+  - ndcg_at_10
+  - mrr_at_10
+  - precision_at_10
+  - recall_at_10
+  - candidate_coverage
+  - avg_latency_ms
+
+selection_rule:
+  - prioritize ndcg_at_10
+  - then mrr_at_10
+  - then recall_at_10
+  - then candidate_coverage
+  - then lower avg_latency_ms
+
+notes:
+  - local synthetic debug data
+  - query-item relevance ranking
+  - LightGBM optional with fallback backend
+  - cross-encoder is a tiny local torch transformer, not HuggingFace

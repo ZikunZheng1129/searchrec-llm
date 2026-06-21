@@ -1,0 +1,67 @@
+seed: 42
+
+input:
+  item_metadata_path: data/processed/item_metadata.parquet
+  query_item_pairs_path: data/processed/query_item_pairs.parquet
+  train_interactions_path: data/processed/train.parquet
+  ranking_candidates_path: data/processed/ranking_candidates.parquet
+
+output:
+  item_embeddings_path: data/embeddings/item_multimodal_embeddings.parquet
+  ranking_candidates_output_path: data/processed/ranking_candidates_multimodal.parquet
+  results_path: validation/results/multimodal_results.csv
+
+multimodal:
+  method: multimodal_fusion
+  split: test
+  top_k: 50
+  include_image_if_available: true
+
+text_encoder:
+  fields:
+    - title
+    - category
+    - brand
+    - description
+  vectorizer: tfidf
+  max_features: 5000
+  normalize: true
+
+metadata_encoder:
+  categorical_fields:
+    - category
+    - brand
+  numeric_fields:
+    - price
+    - avg_rating
+    - rating_count
+  add_log_numeric:
+    - rating_count
+  normalize_numeric: true
+
+image_encoder:
+  enabled: false
+  image_path_column: image_path
+  image_embedding_column: image_embedding
+  allow_test_stub: false
+  normalize: true
+
+fusion:
+  strategy: concat
+  normalize_output: true
+  text_weight: 0.70
+  metadata_weight: 0.30
+  image_weight: 0.0
+
+ranking_augmentation:
+  enabled: true
+  score_column: multimodal_score
+  rank_column: multimodal_rank
+
+evaluation:
+  k_values:
+    - 10
+    - 20
+    - 50
+  cold_start_quantile: 0.25
+  long_tail_quantile: 0.25

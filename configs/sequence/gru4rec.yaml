@@ -1,0 +1,41 @@
+seed: 42
+
+input:
+  train_path: data/processed/train.parquet
+  val_path: data/processed/val.parquet
+  test_path: data/processed/test.parquet
+  item_metadata_path: data/processed/item_metadata.parquet
+
+output:
+  model_dir: artifacts/models/sequence
+  checkpoint_path: artifacts/models/sequence/gru4rec.pt
+  results_path: validation/results/sequence_results.csv
+
+sequence:
+  method: gru4rec
+  max_seq_len: 50
+  min_seq_len: 2
+  eval_split: test
+  exclude_seen: true
+
+model:
+  embedding_dim: 128
+  hidden_dim: 128
+  num_layers: 1
+  dropout: 0.2
+
+training:
+  device: auto
+  batch_size: 128
+  epochs: 20
+  learning_rate: 0.001
+  weight_decay: 0.0
+  num_negatives: 100
+  loss: sampled_bce
+  log_every: 50
+
+evaluation:
+  top_k: 50
+  k_values:
+    - 10
+    - 20

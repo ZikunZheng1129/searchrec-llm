@@ -1,0 +1,13 @@
+stage,method,provider,model,split,num_queries,valid_item_rate,hallucination_rate,output_parse_success_rate,schema_valid_rate,fallback_rate,ndcg_at_10,mrr_at_10,recall_at_10,explanation_faithfulness,avg_latency_ms,p95_latency_ms,estimated_cost_per_1000_queries,config_path
+genrec,candidate_constrained_generation,mock,mock-genrec-v1,test,26,1.0,0.0,1.0,1.0,0.0,0.2454094451676684,0.1673992673992674,0.5,,0.0635304230769278,0.0642189999999487,0.0,configs/genrec/constrained_generator_debug.yaml
+genrec,candidate_constrained_generation,mock,mock-genrec-v1,test,26,1.0,0.0,1.0,1.0,0.0,0.24540944516766844,0.1673992673992674,0.5,,0.05906742307692204,0.07873999999999381,0.0,configs/genrec/genrec_debug.yaml
+genrec,direct_generation,mock,mock-genrec-v1,test,26,0.8999999999999999,0.1,1.0,1.0,0.0,0.0456878001114816,0.0247863247863247,0.1153846153846153,,0.0198316923077069,0.0202920000000328,0.0,configs/genrec/direct_generator_debug.yaml
+genrec,direct_generation,mock,mock-genrec-v1,test,26,0.8999999999999999,0.10000000000000002,1.0,1.0,0.0,0.04568780011148165,0.024786324786324785,0.11538461538461539,,0.019381384615388624,0.020541749999991588,0.0,configs/genrec/genrec_debug.yaml
+genrec,evidence_grounded_llm_explanation,mock,mock-genrec-v1,test,26,,,1.0,1.0,0.0,,,,1.0,0.0433973076923166,0.0532602500000478,0.0,configs/genrec/explanation_debug.yaml
+genrec,evidence_grounded_llm_explanation,mock,mock-genrec-v1,test,26,,,1.0,1.0,0.0,,,,1.0,0.04526600000001388,0.04996850000002495,0.0,configs/genrec/genrec_debug.yaml
+genrec,llm_rerank_top_10,mock,mock-genrec-v1,test,26,1.0,0.0,1.0,1.0,0.0,0.24102850090119896,0.1620115995115995,0.5,,0.03868269230769336,0.043906250000003144,0.0,configs/genrec/genrec_debug.yaml
+genrec,llm_rerank_top_10,mock,mock-genrec-v1,test,26,1.0,0.0,1.0,1.0,0.0,0.2410285009011989,0.1620115995115995,0.5,,0.0475304615384663,0.0481250000000099,0.0,configs/genrec/llm_reranker_debug.yaml
+genrec,llm_rerank_top_20,mock,mock-genrec-v1,test,26,1.0,0.0,1.0,1.0,0.0,0.23902837744543784,0.1527777777777778,0.5384615384615384,,0.05663142307693603,0.06096900000002181,0.0,configs/genrec/genrec_debug.yaml
+genrec,llm_rerank_top_20,mock,mock-genrec-v1,test,26,1.0,0.0,1.0,1.0,0.0,0.2390283774454378,0.1527777777777778,0.5384615384615384,,0.0568862307692451,0.0610210000000221,0.0,configs/genrec/llm_reranker_debug.yaml
+genrec,template_explanation,template,template,test,26,,,1.0,1.0,0.0,,,,1.0,0.0,0.0,0.0,configs/genrec/explanation_debug.yaml
+genrec,template_explanation,template,template,test,26,,,1.0,1.0,0.0,,,,1.0,0.0,0.0,0.0,configs/genrec/genrec_debug.yaml

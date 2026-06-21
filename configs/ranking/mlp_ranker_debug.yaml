@@ -1,0 +1,33 @@
+seed: 42
+
+input:
+  ranking_candidates_path: data/processed/ranking_candidates.parquet
+
+output:
+  model_path: artifacts/models/ranking/mlp_ranker_debug.pt
+  results_path: validation/results/ranking_results.csv
+
+ranking:
+  method: mlp
+  top_k: 20
+  label_column: label
+  group_column: query_id
+
+model:
+  hidden_dims:
+    - 64
+    - 32
+  dropout: 0.1
+
+training:
+  device: cpu
+  epochs: 5
+  batch_size: 64
+  learning_rate: 0.001
+  weight_decay: 0.0
+
+evaluation:
+  split: test
+  k_values:
+    - 10
+    - 20

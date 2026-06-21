@@ -1,0 +1,48 @@
+seed: 42
+
+input:
+  query_item_pairs_path: data/processed/query_item_pairs.parquet
+  item_metadata_path: data/processed/item_metadata.parquet
+  ranking_candidates_path: data/processed/ranking_candidates.parquet
+  ranking_candidates_multimodal_path: data/processed/ranking_candidates_multimodal.parquet
+  llm_query_understanding_path: data/processed/llm_query_understanding.parquet
+  user_profiles_path: data/processed/user_profiles.parquet
+
+output:
+  genrec_outputs_path: data/processed/genrec_outputs.parquet
+  llm_rerank_outputs_path: data/processed/llm_rerank_outputs.parquet
+  explanations_path: data/processed/recommendation_explanations.parquet
+  results_path: validation/results/genrec_results.csv
+  final_llm_decision_report_path: validation/reports/final_llm_decision.md
+
+llm:
+  client: mock
+  provider: mock
+  model: mock-genrec-v1
+  temperature: 0.0
+  max_tokens: 1024
+  timeout_seconds: 30
+  allow_external_api_calls: false
+
+genrec:
+  split: test
+  max_queries: null
+  candidate_source: auto
+  candidate_pool_size: 20
+  final_top_k: 10
+  experiments:
+    - candidate_constrained_generation
+
+constraints:
+  require_candidate_item_ids: true
+  allow_fallback_to_ranked_candidates: true
+  max_recommendations: 10
+
+explanations:
+  max_evidence_items: 5
+  max_explanation_tokens: 120
+  require_evidence_grounding: true
+
+evaluation:
+  k_values:
+    - 10

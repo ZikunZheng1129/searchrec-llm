@@ -1,0 +1,25 @@
+seed: 42
+
+input:
+  item_metadata_path: data/processed/item_metadata.parquet
+  query_item_pairs_path: data/processed/query_item_pairs.parquet
+
+output:
+  index_path: data/indexes/dense_debug.pkl
+  results_path: validation/results/retrieval_results.csv
+
+retrieval:
+  method: dense
+  top_k: 50
+
+dense:
+  vectorizer: tfidf
+  normalize: true
+  max_features: 5000
+
+evaluation:
+  split: test
+  k_values:
+    - 10
+    - 20
+    - 50

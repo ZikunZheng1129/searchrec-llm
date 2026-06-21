@@ -1,0 +1,52 @@
+seed: 42
+
+input:
+  item_metadata_path: data/processed/item_metadata.parquet
+  query_item_pairs_path: data/processed/query_item_pairs.parquet
+  train_interactions_path: data/processed/train.parquet
+
+output:
+  item_embeddings_path: data/embeddings/item_multimodal_embeddings.parquet
+  results_path: validation/results/multimodal_results.csv
+
+multimodal:
+  method: text_metadata_fusion
+  split: test
+  top_k: 50
+
+text_encoder:
+  fields:
+    - title
+    - category
+    - brand
+    - description
+  vectorizer: tfidf
+  max_features: 5000
+  normalize: true
+
+metadata_encoder:
+  categorical_fields:
+    - category
+    - brand
+  numeric_fields:
+    - price
+    - avg_rating
+    - rating_count
+  add_log_numeric:
+    - rating_count
+  normalize_numeric: true
+
+fusion:
+  strategy: concat
+  normalize_output: true
+  text_weight: 0.75
+  metadata_weight: 0.25
+  image_weight: 0.0
+
+evaluation:
+  k_values:
+    - 10
+    - 20
+    - 50
+  cold_start_quantile: 0.25
+  long_tail_quantile: 0.25
