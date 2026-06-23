@@ -1,0 +1,39 @@
+seed: 42
+
+experiment:
+  name: bm25_field_weighted
+  change: Balance early recall by boosting category while keeping description and length normalization.
+
+input:
+  item_metadata_path: data/processed/item_metadata.parquet
+  query_item_pairs_path: data/processed/query_item_pairs.parquet
+
+output:
+  index_path: data/indexes/retrieval_tuning_bm25_field_weighted.pkl
+  results_path: validation/results/retrieval_tuning_results.csv
+
+retrieval:
+  method: bm25
+  top_k: 50
+  item_text_fields:
+    - title
+    - category
+    - brand
+    - description
+
+bm25:
+  k1: 1.5
+  b: 0.25
+  field_weights:
+    title: 1.0
+    category: 2.0
+    brand: 1.0
+    description: 1.0
+
+evaluation:
+  split: test
+  k_values:
+    - 5
+    - 10
+    - 20
+    - 50

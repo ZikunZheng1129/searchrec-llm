@@ -1,0 +1,90 @@
+seed: 42
+
+experiment:
+  name: query_aware_use_case_boost
+  change: Add use-case-triggered text boosts on top of the balanced field-weighted BM25.
+
+input:
+  item_metadata_path: data/processed/item_metadata.parquet
+  query_item_pairs_path: data/processed/query_item_pairs.parquet
+
+output:
+  index_path: data/indexes/retrieval_tuning_query_aware_boost.pkl
+  results_path: validation/results/retrieval_tuning_results.csv
+
+retrieval:
+  method: query_aware_bm25
+  top_k: 50
+  item_text_fields:
+    - title
+    - category
+    - brand
+    - description
+
+bm25:
+  k1: 1.5
+  b: 0.25
+  field_weights:
+    title: 1.0
+    category: 2.0
+    brand: 1.0
+    description: 1.0
+
+boosts:
+  category_match_boost: 0.0
+  brand_match_boost: 0.0
+  use_case_term_boost: 0.35
+  rating_boost: 0.0
+  popularity_boost: 0.0
+  use_case_terms:
+    beginner:
+      - simple
+      - gentle
+      - daily
+      - slim
+      - wellness
+    dry skin:
+      - hydrating
+      - hydration
+      - gentle
+      - skincare
+      - smooth
+    gift:
+      - gentle
+      - refreshing
+      - warm
+      - natural
+      - compact
+    office:
+      - desk
+      - laptop
+      - workdays
+      - calls
+      - stand
+    school:
+      - desk
+      - stand
+      - compact
+      - laptop
+      - tablet
+    travel:
+      - travel
+      - trips
+      - compact
+      - portable
+      - foldable
+      - commutes
+    walking:
+      - walking
+      - running
+      - comfort
+      - cushioned
+      - warm
+
+evaluation:
+  split: test
+  k_values:
+    - 5
+    - 10
+    - 20
+    - 50

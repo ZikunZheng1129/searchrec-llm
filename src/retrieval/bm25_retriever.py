@@ -24,15 +24,35 @@ class BM25Retriever:
         k1: float = 1.5,
         b: float = 0.75,
         item_text_fields: Sequence[str] | None = None,
+        field_weights: dict[str, float] | None = None,
     ) -> None:
         self.k1 = float(k1)
         self.b = float(b)
         self.item_text_fields = list(item_text_fields or DEFAULT_ITEM_TEXT_FIELDS)
+        self.field_weights = {
+            str(key): float(value) for key, value in (field_weights or {}).items()
+        }
         self.item_ids: list[str] = []
-        self.doc_lengths: list[int] = []
+        self.doc_lengths: list[float] = []
         self.avg_doc_length = 0.0
         self.doc_term_counts: list[Counter[str]] = []
         self.idf: dict[str, float] = {}
+
+    def _term_counts_for_row(self, row: pd.Series) -> Counter[str]:
+        if not self.field_weights:
+            return Counter(tokenize(build_item_text(row, self.item_text_fields)))
+
+        term_counts: Counter[str] = Counter()
+        for field in self.item_text_fields:
+            value = row.get(field, "")
+            if pd.isna(value):
+                continue
+            weight = self.field_weights.get(field, 1.0)
+            if weight <= 0:
+                continue
+            for token in tokenize(str(value)):
+                term_counts[token] += weight
+        return term_counts
 
     def fit(self, items: pd.DataFrame) -> BM25Retriever:
         """Build a BM25 index from item metadata."""
@@ -48,10 +68,9 @@ class BM25Retriever:
 
         document_frequency: Counter[str] = Counter()
         for _, row in sorted_items.iterrows():
-            tokens = tokenize(build_item_text(row, self.item_text_fields))
-            term_counts = Counter(tokens)
+            term_counts = self._term_counts_for_row(row)
             self.doc_term_counts.append(term_counts)
-            self.doc_lengths.append(len(tokens))
+            self.doc_lengths.append(float(sum(term_counts.values())))
             document_frequency.update(term_counts.keys())
 
         num_docs = len(self.item_ids)

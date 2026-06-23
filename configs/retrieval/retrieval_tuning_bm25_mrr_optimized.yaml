@@ -1,0 +1,33 @@
+seed: 42
+
+experiment:
+  name: bm25_mrr_optimized
+  change: Drop description and disable BM25 length normalization to reduce metadata noise.
+
+input:
+  item_metadata_path: data/processed/item_metadata.parquet
+  query_item_pairs_path: data/processed/query_item_pairs.parquet
+
+output:
+  index_path: data/indexes/retrieval_tuning_bm25_mrr_optimized.pkl
+  results_path: validation/results/retrieval_tuning_results.csv
+
+retrieval:
+  method: bm25
+  top_k: 50
+  item_text_fields:
+    - title
+    - category
+    - brand
+
+bm25:
+  k1: 1.5
+  b: 0.0
+
+evaluation:
+  split: test
+  k_values:
+    - 5
+    - 10
+    - 20
+    - 50

@@ -6,6 +6,7 @@ from src.retrieval.bm25_retriever import BM25Retriever
 from src.retrieval.dense_retriever import TfidfDenseRetriever
 from src.retrieval.faiss_retriever import FaissRetriever
 from src.retrieval.hybrid_retriever import HybridRetriever
+from src.retrieval.query_aware_bm25_retriever import QueryAwareBM25Retriever
 
 
 def _items() -> pd.DataFrame:
@@ -117,3 +118,64 @@ def test_empty_query_does_not_crash() -> None:
 
     assert len(results) == 2
     assert results[0]["rank"] == 1
+
+
+def test_bm25_field_weights_can_prioritize_title_over_description() -> None:
+    items = pd.DataFrame(
+        [
+            {
+                "item_id": "item_title",
+                "title": "Alpha",
+                "category": "Test",
+                "brand": "A",
+                "description": "plain text",
+            },
+            {
+                "item_id": "item_description",
+                "title": "Plain",
+                "category": "Test",
+                "brand": "B",
+                "description": "Alpha Alpha Alpha",
+            },
+        ]
+    )
+    retriever = BM25Retriever(
+        item_text_fields=["title", "description"],
+        field_weights={"title": 4.0, "description": 0.1},
+        b=0.0,
+    ).fit(items)
+
+    results = retriever.search("alpha", top_k=2)
+
+    assert results[0]["item_id"] == "item_title"
+
+
+def test_query_aware_bm25_adds_use_case_boost() -> None:
+    items = pd.DataFrame(
+        [
+            {
+                "item_id": "item_plain",
+                "title": "Electronics Product",
+                "category": "Electronics",
+                "brand": "Aster",
+                "description": "Generic device.",
+            },
+            {
+                "item_id": "item_travel",
+                "title": "Electronics Product",
+                "category": "Electronics",
+                "brand": "Aster",
+                "description": "Compact portable device for travel.",
+            },
+        ]
+    )
+    retriever = QueryAwareBM25Retriever(
+        b=0.25,
+        use_case_term_boost=1.0,
+        use_case_terms={"travel": ["compact", "portable", "travel"]},
+    ).fit(items)
+
+    results = retriever.search("travel electronics", top_k=2)
+
+    assert results[0]["item_id"] == "item_travel"
+    assert results[0]["metadata_boost"] > 0.0
