@@ -1,0 +1,28 @@
+seed: 42
+
+data:
+  mode: synthetic_debug
+  output_dir: data/interim/retrieval_medium
+  min_interactions_per_user: 3
+  min_interactions_per_item: 1
+
+synthetic:
+  num_users: 300
+  num_items: 1000
+  num_interactions: 5000
+  categories:
+    - Sports & Outdoors
+    - Beauty
+    - Electronics
+    - Clothing
+    - Health & Personal Care
+  start_timestamp: "2024-01-01"
+  end_timestamp: "2024-03-31"
+
+split:
+  method: leave_one_out
+  val_last_n: 1
+  test_last_n: 1
+
+negative_sampling:
+  num_negatives_per_positive: 5

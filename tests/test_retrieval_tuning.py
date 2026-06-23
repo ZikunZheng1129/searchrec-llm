@@ -3,7 +3,9 @@ import pytest
 
 from src.pipelines.run_retrieval_tuning_test import (
     build_comparison_rows,
+    build_multi_relevant_metrics,
     build_query_type_breakdown,
+    summarize_multi_relevant_metrics,
     target_rank,
 )
 
@@ -76,3 +78,41 @@ def test_build_query_type_breakdown_groups_metrics() -> None:
     assert breakdown.loc[0, "recall_at_10"] == 0.5
     assert breakdown.loc[0, "miss_rate_at_10"] == 0.5
     assert breakdown.loc[0, "avg_target_rank"] == 1.0
+
+
+def test_multi_relevant_metrics_group_targets_by_query_text() -> None:
+    per_query = pd.DataFrame(
+        [
+            {
+                "config_name": "benchmark",
+                "query_text": "beauty products",
+                "query_type": "category",
+                "target_item_id": "item_a",
+                "retrieved_item_ids": ["item_x", "item_a", "item_y"],
+                "split": "test",
+                "method": "bm25",
+                "top_k": 3,
+            },
+            {
+                "config_name": "benchmark",
+                "query_text": "beauty products",
+                "query_type": "category",
+                "target_item_id": "item_b",
+                "retrieved_item_ids": ["item_x", "item_a", "item_y"],
+                "split": "test",
+                "method": "bm25",
+                "top_k": 3,
+            },
+        ]
+    )
+
+    multi_relevant = build_multi_relevant_metrics(per_query, [1, 3])
+    summary = summarize_multi_relevant_metrics(multi_relevant)
+
+    assert len(multi_relevant) == 1
+    assert multi_relevant.loc[0, "num_relevant_items"] == 2
+    assert multi_relevant.loc[0, "hit_any_at_1"] == 0.0
+    assert multi_relevant.loc[0, "hit_any_at_3"] == 1.0
+    assert multi_relevant.loc[0, "recall_multi_at_3"] == 0.5
+    assert multi_relevant.loc[0, "mrr_any_at_3"] == 0.5
+    assert summary.loc[0, "num_unique_query_texts"] == 1

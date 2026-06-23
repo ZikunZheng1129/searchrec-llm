@@ -1,0 +1,51 @@
+seed: 42
+
+experiment:
+  name: medium_bm25_overlap_precision
+  change: Medium BM25 top-100 reranked with general title/category/brand overlap to improve early precision without query-type rules.
+
+input:
+  item_metadata_path: data/interim/retrieval_medium/item_metadata.parquet
+  query_item_pairs_path: data/interim/retrieval_medium/query_item_pairs.parquet
+
+output:
+  index_path: data/indexes/retrieval_medium_bm25_overlap_precision.pkl
+  results_path: validation/results/retrieval_medium_results.csv
+
+retrieval:
+  method: overlap_rerank_bm25
+  top_k: 100
+  item_text_fields:
+    - title
+    - category
+    - brand
+    - description
+
+bm25:
+  k1: 1.5
+  b: 0.0
+  field_weights:
+    title: 1.0
+    category: 2.0
+    brand: 1.0
+    description: 1.0
+
+rerank:
+  candidate_pool_size: 100
+  weights:
+    bm25: 0.70
+    title_overlap: 0.35
+    category_overlap: 0.25
+    brand_overlap: 0.20
+    description_overlap: 0.05
+    rating: 0.05
+    popularity: 0.05
+
+evaluation:
+  split: test
+  k_values:
+    - 5
+    - 10
+    - 20
+    - 50
+    - 100

@@ -1,0 +1,21 @@
+seed: 42
+
+input:
+  item_metadata_path: data/interim/retrieval_medium/item_metadata.parquet
+  train_path: data/interim/retrieval_medium/train.parquet
+  val_path: data/interim/retrieval_medium/val.parquet
+  test_path: data/interim/retrieval_medium/test.parquet
+
+output:
+  query_item_pairs_path: data/interim/retrieval_medium/query_item_pairs.parquet
+
+query_generation:
+  queries_per_item: 5
+  include_title_queries: true
+  include_category_queries: true
+  include_brand_queries: true
+  include_use_case_queries: true
+  include_price_queries: true
+
+intent:
+  default_intent: product_search

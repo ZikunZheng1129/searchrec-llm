@@ -1,0 +1,50 @@
+seed: 42
+
+experiment:
+  name: bm25_overlap_balanced
+  change: Small-data field-weighted BM25 top-50 reranked with moderate metadata overlap while preserving candidate recall.
+
+input:
+  item_metadata_path: data/processed/item_metadata.parquet
+  query_item_pairs_path: data/processed/query_item_pairs.parquet
+
+output:
+  index_path: data/indexes/retrieval_tuning_bm25_overlap_balanced.pkl
+  results_path: validation/results/retrieval_tuning_results.csv
+
+retrieval:
+  method: overlap_rerank_bm25
+  top_k: 50
+  item_text_fields:
+    - title
+    - category
+    - brand
+    - description
+
+bm25:
+  k1: 1.5
+  b: 0.25
+  field_weights:
+    title: 1.0
+    category: 2.0
+    brand: 1.0
+    description: 1.0
+
+rerank:
+  candidate_pool_size: 50
+  weights:
+    bm25: 0.85
+    title_overlap: 0.20
+    category_overlap: 0.15
+    brand_overlap: 0.10
+    description_overlap: 0.05
+    rating: 0.10
+    popularity: 0.10
+
+evaluation:
+  split: test
+  k_values:
+    - 5
+    - 10
+    - 20
+    - 50

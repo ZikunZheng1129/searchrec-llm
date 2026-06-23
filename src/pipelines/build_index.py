@@ -17,7 +17,7 @@ from src.retrieval.bm25_retriever import BM25Retriever  # noqa: E402
 from src.retrieval.dense_retriever import TfidfDenseRetriever  # noqa: E402
 from src.retrieval.faiss_retriever import FaissRetriever  # noqa: E402
 from src.retrieval.hybrid_retriever import HybridRetriever  # noqa: E402
-from src.retrieval.query_aware_bm25_retriever import QueryAwareBM25Retriever  # noqa: E402
+from src.retrieval.overlap_rerank_retriever import OverlapRerankRetriever  # noqa: E402
 from src.utils.config import load_yaml_config, resolve_project_path  # noqa: E402
 from src.utils.io import read_parquet  # noqa: E402
 from src.utils.logging import get_logger  # noqa: E402
@@ -52,22 +52,6 @@ def create_retriever(config: dict[str, Any]) -> Any:
             b=float(bm25_config.get("b", 0.75)),
             item_text_fields=item_text_fields,
             field_weights=bm25_config.get("field_weights"),
-        )
-
-    if method == "query_aware_bm25":
-        bm25_config = config.get("bm25", {})
-        boost_config = config.get("boosts", {})
-        return QueryAwareBM25Retriever(
-            k1=float(bm25_config.get("k1", 1.5)),
-            b=float(bm25_config.get("b", 0.75)),
-            item_text_fields=item_text_fields,
-            field_weights=bm25_config.get("field_weights"),
-            category_match_boost=float(boost_config.get("category_match_boost", 0.0)),
-            brand_match_boost=float(boost_config.get("brand_match_boost", 0.0)),
-            use_case_term_boost=float(boost_config.get("use_case_term_boost", 0.0)),
-            use_case_terms=boost_config.get("use_case_terms"),
-            rating_boost=float(boost_config.get("rating_boost", 0.0)),
-            popularity_boost=float(boost_config.get("popularity_boost", 0.0)),
         )
 
     if method == "dense":
@@ -111,6 +95,20 @@ def create_retriever(config: dict[str, Any]) -> Any:
             },
         )
 
+    if method == "overlap_rerank_bm25":
+        bm25_config = config.get("bm25", {})
+        rerank_config = config.get("rerank", {})
+        return OverlapRerankRetriever(
+            candidate_pool_size=int(rerank_config.get("candidate_pool_size", 100)),
+            item_text_fields=item_text_fields,
+            bm25_params={
+                "k1": float(bm25_config.get("k1", 1.5)),
+                "b": float(bm25_config.get("b", 0.75)),
+                "field_weights": bm25_config.get("field_weights"),
+            },
+            weights=rerank_config.get("weights"),
+        )
+
     raise ValueError(f"Unsupported retrieval.method: {method}")
 
 
@@ -118,14 +116,14 @@ def load_retriever(method: str, path: str | Path) -> Any:
     """Load a retriever index for a configured method."""
     if method == "bm25":
         return BM25Retriever.load(path)
-    if method == "query_aware_bm25":
-        return QueryAwareBM25Retriever.load(path)
     if method == "dense":
         return TfidfDenseRetriever.load(path)
     if method == "faiss":
         return FaissRetriever.load(path)
     if method == "hybrid":
         return HybridRetriever.load(path)
+    if method == "overlap_rerank_bm25":
+        return OverlapRerankRetriever.load(path)
     raise ValueError(f"Unsupported retrieval.method: {method}")
 
 
