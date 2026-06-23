@@ -32,7 +32,7 @@ and a small item catalog.
 
 | stage | method | primary_metric_name | primary_score | avg_latency_ms | p95_latency_ms | coverage_score |
 | --- | --- | --- | --- | --- | --- | --- |
-| ranking | lightgbm | ndcg_at_10 | 0.2999 | 0.1591 | 0.1591 | 1.0000 |
+| ranking | lightgbm | ndcg_at_10 | 0.2999 | 0.1215 | 0.1215 | 1.0000 |
 | ranking | mixed | ndcg_at_10 | 0.2718 | 2.4340 | 2.4340 | 1.0000 |
 | ranking | mlp | ndcg_at_10 | 0.2713 | 0.1657 | 0.1657 | 1.0000 |
 | ranking | cross_encoder | ndcg_at_10 | 0.1327 | 4.8991 | 4.8991 | 1.0000 |

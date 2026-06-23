@@ -37,7 +37,7 @@ not production claims.
 | multimodal | text_only | ndcg_at_10 | 0.2801 | cold_start_recall_at_10 | 0.3333 | catalog_coverage_at_10 | 0.6800 | 0.0600 |
 | multimodal | multimodal_fusion | ndcg_at_10 | 0.2454 | cold_start_recall_at_10 | 0.4444 | catalog_coverage_at_10 | 0.6500 | 0.0652 |
 | multimodal | metadata_only | ndcg_at_10 | 0.0530 | cold_start_recall_at_10 | 0.2222 | catalog_coverage_at_10 | 0.1000 | 0.0334 |
-| ranking | lightgbm | ndcg_at_10 | 0.2999 | mrr_at_10 | 0.2274 | candidate_coverage | 1.0000 | 0.1591 |
+| ranking | lightgbm | ndcg_at_10 | 0.2999 | mrr_at_10 | 0.2274 | candidate_coverage | 1.0000 | 0.1215 |
 | ranking | mixed | ndcg_at_10 | 0.2718 | mrr_at_10 | 0.1885 | candidate_coverage | 1.0000 | 2.4340 |
 | ranking | mlp | ndcg_at_10 | 0.2713 | mrr_at_10 | 0.1918 | candidate_coverage | 1.0000 | 0.1657 |
 | ranking | cross_encoder | ndcg_at_10 | 0.1327 | mrr_at_10 | 0.0703 | candidate_coverage | 1.0000 | 4.8991 |
@@ -66,7 +66,7 @@ not production claims.
 
 ## Best Ranking Baseline
 
-`lightgbm` selected for ranking because it has the best ndcg_at_10=0.2999, with mrr_at_10=0.2274, candidate_coverage=1.0000, and avg latency 0.1591 ms.
+`lightgbm` selected for ranking because it has the best ndcg_at_10=0.2999, with mrr_at_10=0.2274, candidate_coverage=1.0000, and avg latency 0.1215 ms.
 
 ## Best LLM Query-Understanding Baseline
 
